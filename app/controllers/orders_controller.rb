@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    @orders = Order.where(:user_id => current_user.id)
   end
 
   # GET /orders/1
@@ -67,6 +67,9 @@ class OrdersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_order
     @order = Order.find(params[:id])
+    if @order.user_id != current_user.id
+      render :file => "public/500.html", :status => 500, :layout => false
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
