@@ -5,17 +5,19 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.where(:user_id => current_user.id)
+    @orders = Order.includes(:order_details).where(:user_id => current_user.id)
   end
 
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @total_amount = @order.order_details.map { |x| x.product.price * x.amount }.sum
   end
 
   # GET /orders/new
   def new
-    @order = Order.new
+    @order = current_user.orders.create()
+    redirect_to order_path(@order)
   end
 
   # GET /orders/1/edit
@@ -66,7 +68,7 @@ class OrdersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_order
-    @order = Order.find(params[:id])
+    @order = Order.includes(:order_details).find(params[:id])
     if @order.user_id != current_user.id
       render :file => "public/500.html", :status => 500, :layout => false
     end
@@ -74,6 +76,6 @@ class OrdersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def order_params
-    params.require(:order).permit(:user_id)
+    params.require(:order).permit(:user_id, order_details_attributes: [:id, :amount, :_destroy])
   end
 end

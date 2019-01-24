@@ -5,7 +5,9 @@
 <table>
   <thead>
     <tr>
-      <th>User</th>
+      <th>訂單流水號</th>
+      <th>商品明細</th>
+      <th>總金額</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -13,7 +15,19 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.user %></td>
+        <td><%= order.id %></td>
+        <td>
+          <% order.order_details.each_with_index do |x,index| %>
+            <% next if x.amount == 0 %>
+            <strong><%= x.product.name %></strong>
+            單價: <%= x.product.price %>
+            數量: <%= x.amount %>
+            <%= sanitize "<br>" if index != order.order_details.size - 1 %>
+          <% end %>
+        </td>
+        <td>
+          <%= order.order_details.map { |x| x.product.price * x.amount }.sum %>
+        </td>
         <td><%= link_to 'Show', order %></td>
         <td><%= link_to 'Edit', edit_order_path(order) %></td>
         <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>

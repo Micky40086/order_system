@@ -2,7 +2,21 @@
 
 <p>
   <strong>User:</strong>
-  <%= @order.user %>
+  <%= @order.user.email %>
+</p>
+
+<% @order.order_details.each do |x| %>
+<% next if x.amount == 0 %>
+<p>
+  <strong><%= x.product.name %></strong>
+  單價: <%= x.product.price %>
+  數量: <%= x.amount %>
+</p>
+<% end %>
+
+<p>
+  <strong>總金額</strong>
+  <%= @total_amount %>
 </p>
 
 <%= link_to 'Edit', edit_order_path(@order) %> |

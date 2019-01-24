@@ -1,1 +1,6 @@
 <h1>Home Page</h1>
+
+<% if !user_signed_in? %>
+  <a href="<%= orders_path %>">使用者登入</a>
+<% end %>
+<a href="<%= orders_path %>">前往訂單系統</a>

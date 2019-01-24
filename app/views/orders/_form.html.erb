@@ -11,10 +11,9 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
-  </div>
+  <%= form.fields_for :order_details do |order_detail| %>
+    <%= render 'order_detail_field', f: order_detail %>
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>
